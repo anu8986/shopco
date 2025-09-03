@@ -1,0 +1,172 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navbar Container */
+.Navbarcontainer {
+    display: flex;
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
+    align-items: center;
+    background-color: rgb(238, 238, 238);
+    padding: 15px 30px;
+}
+
+.homecontainer {
+    height: 1000px;
+    background-color: aquamarine;
+}
+
+/* Logo */
+.logo-img {
+    height: 50px;
+    width: auto;
+}
+
+/* Menu List */
+.menulist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    gap: 25px;
+    align-items: center;
+}
+
+.menu-link {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.menu-link:hover {
+    color: #0a74ff;
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.arrow-icon {
+    margin-left: 5px;
+}
+
+/* Dropdown Menu */
+.menudropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgb(236, 231, 231);
+    padding: 10px 0;
+    min-width: 150px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.dropdown:hover .menudropdown {
+    display: block;
+}
+
+.submenulist {
+    list-style: none;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.submenulist a {
+    text-decoration: none;
+    color: black;
+}
+
+.submenulist:hover {
+    /* background-color: rgb(250, 250, 250); */
+    transform: translateX(5px);
+    border-radius: 1rem;
+}
+
+.sidemenuicon {
+    font-size: 25px;
+    margin-top: 12px;
+    border: none;
+    background-color: transparent;
+}
+
+.sidemenu {
+    position: relative;
+    display: none;
+
+}
+
+.sidemenucontainer {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 70vw;
+    height: 100vh;
+    background-color: blue;
+    z-index: 999;
+
+}
+
+.sidemenulist {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    list-style: none;
+    gap: 25px;
+}
+
+.closebtn {
+    margin-top: 10px;
+}
+
+.closebtncontainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 19px;
+    padding: 30px;
+}
+
+.inputcontainer {
+    display: block;
+    width: 250px;
+}
+
+.avatar {
+    border: none;
+    background-color: transparent;
+}
+
+@media (max-width:780px) {
+    .menulist {
+        display: none;
+    }
+
+    .sidemenu {
+        display: inline;
+    }
+
+    .sidemenucontainer {
+        display: inline;
+    }
+
+    .inputcontainer {
+        display: none;
+    }
+
+    .Navbarcontainer {
+        display: flex;
+        justify-content: end;
+    }
+}
