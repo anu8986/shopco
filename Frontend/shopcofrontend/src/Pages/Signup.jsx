@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"
+import axios from "axios"
 export default function Signup() {
     const navigate = useNavigate()
     const [name, setName] = useState("");
@@ -13,6 +15,7 @@ export default function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const baseurl = import.meta.env.VITE_BASEURL
 
     const validate = () => {
         const next = {};
@@ -38,12 +41,15 @@ export default function Signup() {
         if (!validate()) return;
         setIsSubmitting(true);
         try {
-            // TODO: replace with real API call
-            await new Promise((r) => setTimeout(r, 800));
-            alert(`Account created for ${name}`);
+            fetchingsignup(
+                name,
+                email,
+                contact,
+                password,
+                confirmPassword
+            )
         } catch (err) {
             console.error(err);
-            alert("Signup failed. Try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -52,6 +58,29 @@ export default function Signup() {
     const handlesignupchange = () => {
         navigate('/')
     }
+
+    const fetchingsignup = async (name, email, contact, password, confirmPassword) => {
+        const data = {
+            Name: name,
+            Email: email,
+            ContactNumber: contact,
+            Password: password,
+            ConfirmPassword: confirmPassword
+        }
+        try {
+            const response = await axios.post(`${baseurl}/user/signup`, data)
+            toast.success(response.data.message)
+            navigate('/')
+        } catch (error) {
+            console.log(error.response.data, 'fetching')
+            if (error.response && error.response.data) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Something went wrong!");
+            }
+        }
+    }
+
 
     return (
         <div className="container d-flex align-items-center justify-content-center vh-100">

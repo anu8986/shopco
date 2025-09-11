@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -11,6 +13,15 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({ email: "", password: "" });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const baseurl = import.meta.env.VITE_BASEURL
+
+    // const token = JSON.parse(localStorage.getItem('token'))
+    // console.log(token, 'token')
+
+    // const headers = {
+    //     "Content-Type": "application/json",
+    //     "Authorization": `Bearer ${token}`
+    // }
 
     const validate = () => {
         const next = { email: "", password: "" };
@@ -24,15 +35,33 @@ export default function Login() {
         return !next.email && !next.password;
     };
 
+    const fetchuser = async (email, password) => {
+        const data = {
+            Email: email,
+            Password: password
+        }
+        try {
+            const response = await axios.post(`${baseurl}/user/login`, data)
+            localStorage.setItem("token", JSON.stringify(response.data.data.token))
+            localStorage.setItem('user', JSON.stringify(response.data));
+            toast.success("user logined successfully")
+            navigate("/Home", { replace: true });
+        } catch (error) {
+            console.log(error.stack, '')
+            if (error.response && error.response.data) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Something went wrong!");
+            }
+        }
+    }
+
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
         setIsSubmitting(true);
         try {
-            // TODO: replace with real API call
-            await new Promise((r) => setTimeout(r, 800));
-            alert(`Logged in as ${email}`);
-            navigate('/Home')
+            fetchuser(email, password)
         } catch (err) {
             console.error(err);
             alert("Login failed. Try again.");
@@ -44,6 +73,8 @@ export default function Login() {
     const handlesignupchange = () => {
         navigate('/Signup')
     }
+
+
 
     return (
         <div className="container d-flex align-items-center justify-content-center vh-100">
@@ -98,10 +129,10 @@ export default function Login() {
 
                         {/* Extras */}
                         <div className="d-flex justify-content-between align-items-center mb-3">
-                            <div className="form-check">
+                            {/* <div className="form-check">
                                 <input className="form-check-input" type="checkbox" id="rememberMe" />
                                 <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
-                            </div>
+                            </div> */}
                             <span className="small text-decoration-none text-primary">Forgot password?</span>
                         </div>
 

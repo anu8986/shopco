@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, } from 'react-router-dom';
+import { Link, useNavigate, } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";
 import { RiMenuFoldFill } from "react-icons/ri"
 import { FaShoppingCart } from "react-icons/fa";
@@ -10,15 +10,33 @@ import TextField from '@mui/material/TextField';
 import "../App.css";
 import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
+import Input from './Input';
+import Profile from '../Pages/Profile';
 
 const Navbar = () => {
+    const navigate = useNavigate()
     const [showmenu, setShowMenu] = useState(false)
+    const [showprofile, setShowprofile] = useState(false)
     // const navigate = useNavigate();
-
+    const handlelogout = () => {
+        navigate('/')
+        localStorage.clear()
+    }
     const handelshowmenu = () => {
         setShowMenu(!showmenu)
-        console.log('btn is clicked ')
     }
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    const options = [
+        { key: 'Mens', value: 'Mens' },
+        { key: 'Womens', value: 'Womens' },
+        { key: 'Kids', value: 'Kids' },
+        { key: 'Brands', value: 'Brands' },
+        { key: 'NewArrivals', value: 'New Arrivals' },
+        { key: 'Offers', value: 'Offers' },
+        { key: 'Shop', value: 'Shop' },
+    ];
+
 
     return (
         <nav className="navbar">
@@ -29,40 +47,32 @@ const Navbar = () => {
                 </div>
 
                 {/* Menu */}
-                <ul className="menulist ">
-                    <li className="dropdown">
+                <ul className="menulist fs-6 ">
+                    <li className="dropdown ">
                         <span>
-                            <Link  className="menu-link">Shop</Link>
+                            <Link className="menu-link">Shop</Link>
                             <IoIosArrowDown className="arrow-icon" />
                         </span>
                         <ul className="menudropdown">
                             <li className="submenulist"><Link to="/Menscollection">Mens</Link></li>
-                            <li className="submenulist"><Link to="/Womencollection">Womens</Link></li>
+                            {/* <li className="submenulist"><Link to="/Womencollection">Total Purchase</Link></li> */}
                             <li className="submenulist"><Link to="/Kidscollection">Kids</Link></li>
                             <li className="submenulist"><Link to="/Offers">Offers</Link></li>
                         </ul>
                     </li>
                     <li><Link className="menu-link" to="/Newarraivels">New Arrivals</Link></li>
                     <li><Link className="menu-link" to="/Brands">Brands</Link></li>
+                    <li><Link className="menu-link" to="/TotalPurchase">Total Purchase</Link></li>
+
                 </ul>
 
 
                 <div className='inputcontainer'>
-                    <Box
-                        component="form"
-                        sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            id="standard-multiline-flexible"
-                            label="search"
-                            multiline
-                            maxRows={4}
-                            variant="standard"
-
-                        />
-                    </Box>
+                    <Input
+                        type="text"
+                        placeholder="Search"
+                        options={options}
+                    />
                 </div>
 
                 <div className='d-flex gap-2'>
@@ -86,10 +96,10 @@ const Navbar = () => {
 
                                 <div>
                                     <ul className=" sidemenulist">
-                                        <li><Link className="menu-link" to="/onsale">On Sale</Link></li>
-                                        <li><Link className="menu-link" to="/newarrivals">New Arrivals</Link></li>
-                                        <li><Link className="menu-link" to="/brands">Brands</Link></li>
-                                        <li><Link className="menu-link" to="/login">Login</Link></li>
+                                        <li><Link className="menu-link" to="/Menscollection">Mens</Link></li>
+                                        <li><Link className="menu-link" to="/Newarraivels">New Arrivals</Link></li>
+                                        {/* <li><Link className="menu-link" to="/brands">Brands</Link></li> */}
+                                        <li onClick={handlelogout}>Log out</li>
                                     </ul>
                                 </div>
 
@@ -99,13 +109,21 @@ const Navbar = () => {
                     <div className='sidemenuicon'>
                         <FaShoppingCart />
                     </div>
-                    <button className='avatar'>
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                            sx={{ width: 56, height: 56 }}
-                        />
-                    </button>
+                    <div className='avatar-container'>
+                        <button className='avatar' onClick={() => setShowprofile(!showprofile)}>
+                            <Avatar
+                                alt={storedUser.data.Name}
+                                src="/static/images/avatar/1.jpg"
+                                sx={{ width: 56, height: 56 }}
+                            />
+
+                        </button>
+                        {showprofile && (
+                            <div className='profile-card'>
+                                <Profile user={storedUser.data} />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

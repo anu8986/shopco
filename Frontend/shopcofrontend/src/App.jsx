@@ -13,23 +13,118 @@ import Signup from './Pages/Signup';
 import Addtocarts from './Pages/Addtocarts';
 import Offers from './Pages/Offers';
 import UnauthorizedPage from './Pages/UnauthorizedPage';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import Protecter from './components/Protecter';
+import { Provider } from 'react-redux'
+import { store } from './redux/store';
+import Showproduct from './Pages/Showproduct';
+import TotalPurchase from './Pages/Womencollection';
 
 
 const Appcontent = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/UnauthorizedPage' element={<UnauthorizedPage />} />
-        <Route path='/Home' element={<Home />} />
-        <Route path='/Menscollection' element={<Menscollection />} />
-        <Route path='/Womencollection' element={<Womencollection />} />
-        <Route path='/Kidscollection' element={<Kidscollection />} />
-        <Route path='/Newarraivels' element={<Newarraivels />} />
-        <Route path='/Offers' element={<Offers />} />
-        <Route path='/Brands' element={<Brands />} />
-        <Route path='/Addtocarts' element={<Addtocarts />} />
-        <Route path='/Signup' element={<Signup />} />
+        <Route
+          path='/'
+          element={
+            <Login />
+          }
+        />
+        <Route
+          path='/*'
+          element={
+            <UnauthorizedPage />
+          }
+        />
+        <Route
+          path='/Home'
+          element={
+            <Protecter>
+              <Home />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Showproduct/:id'
+          element={
+            <Protecter>
+              <Showproduct />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Menscollection'
+          element={
+            <Protecter>
+              <Menscollection />
+            </Protecter>
+          }
+        />
+                <Route
+          path='/TotalPurchase'
+          element={
+            <Protecter>
+              <TotalPurchase />
+            </Protecter>
+          }
+        />
+        <Route path='/Womencollection'
+          element={
+            <Protecter>
+              <Womencollection />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Kidscollection'
+          element={
+            <Protecter>
+              <Kidscollection />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Newarraivels'
+          element={
+            <Protecter>
+              <Newarraivels />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Offers'
+          element={
+            <Protecter>
+              <Offers />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Brands'
+          element={
+            <Protecter>
+              <Brands />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Addtocarts'
+          element={
+            <Protecter>
+              <Addtocarts />
+            </Protecter>
+          }
+        />
+        <Route
+          path='/Signup'
+          element={
+
+            <Signup />
+
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
@@ -38,7 +133,19 @@ const Appcontent = () => {
 const App = () => {
   return (
     <div>
-      <Appcontent />
+      <Provider store={store}>
+        <Appcontent />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000} // 3 seconds
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="colored"
+        />
+      </Provider>
     </div>
   )
 }

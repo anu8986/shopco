@@ -1,10 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
-const Protecter = () => {
+const Protecter = ({ children }) => {
+  const location = useLocation();
+  const [token, setToken] = useState(null);
 
-  return (
-    <div>Protecter</div>
-  )
-}
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const userinfo = storedUser ? JSON.parse(storedUser) : null;
+      setToken(userinfo?.data?.token || userinfo?.token);
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
 
-export default Protecter
+  if (token === null) {
+    // still checking, render nothing or loader
+    return null;
+  }
+
+  if (!token) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname }}
+        replace:false
+      />
+    );
+  }
+
+  return children;
+};
+
+export default Protecter;
