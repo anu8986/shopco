@@ -1,33 +1,26 @@
 import bcrypt from "bcrypt"
 import { Jsontoken } from "../Utils/Jwt.js"
-import user from "../Models/login.js"
+import User from "../Models/login.js"
 
 export const signupcontroller = async (req, res) => {
     try {
-        const { Name, Email, ContactNumber, Password, ConfrimPassword } = req.body
-        if (!Name) {
-            return res.json({ message: "User Name is required" })
-        }
-        if (!Email) {
-            return res.json({ message: "User Email is required" })
-        }
-        if (!ContactNumber) {
-            return res.json({ message: "User Contact Number is required" })
-        }
-        if (!Password) {
-            return res.json({ message: "User Password is required" })
-        }
-        if (Password.length < 8) {
-            return res.json({ message: "Password must greathan 8 element" })
-        }
-        if (Password !== ConfrimPassword) {
-            return res.json({ message: "ConfrimPassword doesnot match" })
+        const { Name, Email, ContactNumber, Password, ConfirmPassword } = req.body
+
+        if (!Name) return res.status(400).json({ message: "User Name is required" })
+        if (!Email) return res.status(400).json({ message: "User Email is required" })
+        if (!ContactNumber) return res.status(400).json({ message: "User Contact Number is required" })
+        if (!Password) return res.status(400).json({ message: "User Password is required" })
+        if (Password.length < 8) return res.status(400).json({ message: "Password must be at least 8 characters" })
+        if (Password !== ConfirmPassword) return res.status(400).json({ message: "Confirm Password does not match" })
+
+        const existingUser = await User.findOne({ Email })
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already exists" })
         }
 
-        const hashpassword = await bcrypt.hash(ConfrimPassword, 10)
-        console.log(hashpassword, 'hashpasswords')
+        const hashpassword = await bcrypt.hash(Password, 10)
 
-        const Newuser = new user({
+        const Newuser = new User({
             Name,
             Email,
             ContactNumber,
@@ -35,27 +28,63 @@ export const signupcontroller = async (req, res) => {
         })
 
         await Newuser.save()
+        console.log(Newuser, 'User created successfully')
+
+
 
         res.status(201).json({
-            message: "user us created successfully",
+            message: "User created successfully",
             data: {
                 Name: Newuser.Name,
                 Email: Newuser.Email,
                 ContactNumber: Newuser.ContactNumber,
                 _id: Newuser._id,
-                createAt: Newuser.createdAt,
+                createdAt: Newuser.createdAt,
                 updatedAt: Newuser.updatedAt
             }
         })
 
-        Jsontoken(Newuser._id, res)
-
-
-        console.log(Newuser, 'new user is created ')
     } catch (error) {
-        console.log(error.message, "from the usercontroller")
-        res.status(500).json({ message: "Internel Error " })
+        console.log(error.message, "usercontroller")
+        console.log(error.stack, "usercontroller1")
+
+        res.status(500).json({ message: "Internal Server Error" })
     }
 }
 
+export const Loginusercontroller = async (req, res) => {
+    try {
+        const { Email, Password } = req.body
+        if (!Email) return res.status(404).json({ message: "Email is not Provided" })
+        if (!Password) return res.status(404).json({ message: "Password is not Provided" })
+        const user = await User.findOne({ Email: Email })
 
+        console.log(user, 'users')
+        if (!user) return res.status(401).json({ message: "Email is not vaild" })
+        const vertifypasswords = await bcrypt.compare(Password, user.Password)
+        console.log(vertifypasswords, 'vertifyedpassowrds')
+        if (!vertifypasswords) return res.status(401).json({ message: "Invaild passowrd provided" })
+        const token = Jsontoken(user._id)
+    console.log(token,'token from controller')
+
+        res.status(201).json(
+            {
+                message: "successfully logined ",
+                data: {
+                    Name: user.Name,
+                    Email: user.Email,
+                    ContactNumber: user.ContactNumber,
+                    token: token,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
+                    _id: user._id
+                }
+
+            })
+
+    } catch (error) {
+        console.log(error.stack, 'logincontroller')
+        console.log(error.message, 'logincontroller1')
+
+    }
+}
