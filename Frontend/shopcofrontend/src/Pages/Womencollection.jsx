@@ -55,7 +55,7 @@ const TotalPurchase = () => {
     <Newlayout>
       <div className="new-arrivals-container">
         <div className="header">
-          <h1>NEW ARRIVALS</h1>
+          <h1> Total Purchase</h1>
         </div>
 
         <div className="products-grid">

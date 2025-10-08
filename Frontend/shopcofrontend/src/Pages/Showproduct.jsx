@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Newlayout from '../components/Newlayout'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Profile from './Profile'
+import { selectedmoreproduct } from '../redux/moreproduct'
 
 const Showproduct = () => {
+    const dispatch = useDispatch()
+    const navigate= useNavigate()
     const { id } = useParams()
     const [signleProduct, setsingleProduct] = useState({})
     const [showModal, setShowModal] = useState(false);
@@ -13,7 +16,7 @@ const Showproduct = () => {
         setShowModal(true);
     };
 
-    const selector = useSelector((state) => state.product.product)
+    // const selector = useSelector((state) => state.product.product)
 
     const fetchingsingleproduct = async (id) => {
         fetch(`https://fakestoreapi.com/products/${id}`)
@@ -44,6 +47,12 @@ const Showproduct = () => {
 
         return stars;
     };
+
+    const handlesavecart = ()=>{
+        console.log('this btn is clicked ')
+        dispatch(selectedmoreproduct(signleProduct))
+        // navigate('/Addtocarts')
+    }
 
 
     return (
@@ -135,7 +144,7 @@ const Showproduct = () => {
                                 >
                                     Close
                                 </button>
-                                <button className="btn btn-primary">Go to Cart</button>
+                                <button onClick={()=>handlesavecart()} className="btn btn-primary">Go to Cart</button>
                             </div>
                         </div>
                     </div>

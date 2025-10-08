@@ -191,6 +191,9 @@
 
 }
 
+.card-container{
+    
+}
 .sidemenulist {
     display: flex;
     flex-direction: column;

@@ -107,7 +107,10 @@ const Navbar = () => {
                         )}
                     </div>
                     <div className='sidemenuicon'>
+                        <button onClick={()=>navigate('/Addtocarts')}>
                         <FaShoppingCart />
+
+                        </button>
                     </div>
                     <div className='avatar-container'>
                         <button className='avatar' onClick={() => setShowprofile(!showprofile)}>

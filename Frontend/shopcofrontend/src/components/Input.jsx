@@ -71,7 +71,9 @@ const Input = ({
             {optionList.map((item) => (
               <li
                 key={item.key}
-                onClick={() => handleclick(item.key)} className="search-menuitem">
+                onClick={() => handleclick(item.key)}
+                className="search-menuitem"
+              >
                 {item.value}
               </li>
             ))}
