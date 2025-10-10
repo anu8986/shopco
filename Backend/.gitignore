@@ -1,0 +1,5 @@
+# Environment files
+.env
+
+# Dependency lock file
+package-lock.json

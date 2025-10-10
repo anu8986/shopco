@@ -4,19 +4,23 @@ import dotenv from "dotenv";
 import routes from "./routes.js";
 import { Connectdb } from "./Utils/Db.js";
 import multer from "multer";
+import http from "http"
 
 dotenv.config();
 const app = express();
+const server = http.createServer(app)
 
-app.use(cors({
-    origin: "http://localhost:5173" || "http://localhost:5174",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// this allow the local host 5173 5174
+
+// app.use(cors({
+//     origin: "http://localhost:5173" || "http://localhost:5174",
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"]
+// }));
 
 
-// app.use(cors())
+app.use(cors())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,7 +34,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
     try {
         await Connectdb();
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log(`✅ Server running at http://localhost:${PORT}`);
         });
     } catch (err) {
